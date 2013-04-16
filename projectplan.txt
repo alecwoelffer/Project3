@@ -1,0 +1,16 @@
+Project 3 Plan - Team 23
+  Alec Woelffer
+	Nick Winard
+	Kang Du
+
+•	Language:  The language our team will be using for this project is python.  No one in the group has any previous experience working with python.  We chose this language because no one in the group was familiar with any other web based language and python seems to be the easiest one to pick up. 
+
+•	Application: Our application will be a database of crimes displayed on a map confined to the college station area.  Users will be able to see where different types of crime occur in the college station area in our application and rates of crime.  
+o	Major Features: Use of social media (Facebook/Twitter etc.) to login to application and share crime information. Ability to set “Home” location which will be notified if crimes occur in area. Access specific crime data at specified location. 
+o	Minor Features: Police Departments location and contact info, Highlight Safe Locations, Display lists of top crime locations 
+o	Extra Feature: (If time allows) cop patrol routes, weekly crime trivia 
+
+•	Initial Organization: (subject to change) 
+o	Alec: Gather necessary Crime data
+o	Nick: Design interface 
+o	Kang:  Design functionality
