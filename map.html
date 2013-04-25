@@ -10,10 +10,15 @@
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfzQLVgFbpnRbeTk4EKkhBsBgTzZN5P0c&sensor=true">
     </script>
+    <script type="text/javascript"
+     src="https://maps.googleapis.com/maps/api/js?libraries=geometry,visualization&sensor=true">
+    </script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
       //Creates the Map 
       var gmarkers = [];
+      var crime_coord = [];
+      var police_coord = [];
       var map; 
       function initialize() {
         var mapOptions = {
@@ -90,6 +95,7 @@
           $.each(data, function (key, val){
               var info = "<p><b>Crime:</b> " + val["crime"]+ "<br><b>Address:</b> " + val["address"] + "<br><b>Date:</b> " + val["date"];
               var coordinates = new google.maps.LatLng(val["lat"], val["lng"]);
+              crime_coord.push(coordinates);
               if(val["crime"] == "Theft" || val["crime"] == "theft"){
                   var marker = new google.maps.Marker({
                     map: map, 
@@ -174,6 +180,7 @@
                     title: info,
                     icon: "arrest.png"
                   });
+                  police_coord.push(coordinates);
                   marker.category = val["crime"];
                   marker.coordinates = coordinates; 
                   gmarkers.push(marker);
@@ -206,6 +213,7 @@
               });
             });
         });
+      
        }
 
        function boxclick(box, cat){
@@ -255,6 +263,47 @@
           }
         });
        }
+       var heatmap = new google.maps.visualization.HeatmapLayer({
+            data: crime_coord
+          });
+       var policemap = new google.maps.visualization.HeatmapLayer({
+            data: police_coord
+       });
+       var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+      policemap.setOptions({gradient: policemap.get('gradient') ? null : gradient});
+
+      function heat(box){
+        if(box.checked){
+          heatmap.setMap(map);
+        }
+        else{
+          heatmap.setMap(null);
+        }
+      }
+      function police(box){
+        if(box.checked){
+          policemap.setMap(map);
+        }
+        else{
+          policemap.setMap(null);
+        }
+      }
+      
 
         
       
@@ -279,6 +328,10 @@
         <input id = "vandalism_box" type = "checkbox" onclick="boxclick(this,'Vandalism')"> </input>
       Other:
         <input id = "other_box" type = "checkbox" onclick="boxclick(this,'Other')"> </input>
+      Highlight Crime Areas: 
+        <input id = "crime_box" type = "checkbox" onclick="heat(this)"> </input>
+      Highlight Police Presence: 
+         <input id = "police_box" type = "checkbox" onclick="police(this)"> </input>
       <input type="text" id="inputTextAddress" style=" width:200px" title="Address to Geocode" />
       <input type="button" onclick="codeAddress()" id="inputButtonGeocode" style="width:150px" title="Home Address" value="Home Address" />
     <div>
