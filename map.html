@@ -15,11 +15,13 @@
     </script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript">
-      //Creates the Map 
+      
       var gmarkers = [];
+      var adjmarkers = [];
       var crime_coord = [];
       var police_coord = [];
       var map; 
+      //Creates up the map 
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(30.673353,-96.368637),
@@ -45,7 +47,7 @@
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
         map.setOptions({styles: styles});
 
-        //Police Station 1
+        //Police Station 1 marker
         var policeinfo = "<p><b>College Station Police Department:</b> " + "<br><b>Address:</b> " + "2611 Texas Ave S, College Station, TX" + "<br><b>Contact Info:</b> " + "(979) 764-3692";
         var police1 = new google.maps.LatLng(30.602699, -96.303439);
         var marker1 = new google.maps.Marker({
@@ -60,7 +62,7 @@
             policewindow.open(map,marker1);
         });
 
-        //Police Station 2
+        //Police Station 2 marker
         var policeinfo2 = "<p><b>Bryan Police Department:</b> " + "<br><b>Address:</b> " + "303 E 29th St, Bryan, TX" + "<br><b>Contact Info:</b> " + "(979) 209-5300";
         var police2 = new google.maps.LatLng(30.670495, -96.371719);
         var marker2 = new google.maps.Marker({
@@ -75,7 +77,7 @@
             policewindow2.open(map,marker2);
         });
 
-        //Police Station 3
+        //Police Station 3 marker
         var policeinfo3 = "<p><b>Texas A&M Police Department:</b> " + "<br><b>Address:</b> " + "1111 Research Pkwy, College Station, TX" + "<br><b>Contact Info:</b> " + "(979) 845-2345";
         var police3 = new google.maps.LatLng(30.603513, -96.36211);
         var marker3 = new google.maps.Marker({
@@ -90,6 +92,7 @@
             policewindow3.open(map,marker3);
         });
 
+        var infowindow = new google.maps.InfoWindow();
         //Parse Json File for Crime Data
          $.getJSON("2011data.json",function(data){
           $.each(data, function (key, val){
@@ -196,17 +199,9 @@
                   marker.coordinates = coordinates; 
                   gmarkers.push(marker);
               }
-              hide("Assault");
-              hide("Theft");
-              hide("Arrest");
-              hide("Burglary");
-              hide("Shooting");
-              hide("Robbery");
-              hide("Vandalism");
-              hide("Other");
-              var infowindow = new google.maps.InfoWindow({
-                content: info
-              });
+              hideall();
+
+              infowindow.setContent(info);
 
               google.maps.event.addListener(marker, 'click', function(){
                  infowindow.open(map,marker);
@@ -215,34 +210,37 @@
         });
       
        }
-
-       function boxclick(box, cat){
-        if(box.checked){
-          show(cat);
-        } else {
-          hide(cat);
-        }
-       }
+       //Displays markers of a particular category 
        function show(cat){
           for(var i = 0; i < gmarkers.length; i++){
             if(gmarkers[i].category == cat){
               gmarkers[i].setVisible(true);
             }
-          }
-       }
-       function hide(cat){
-         for(var i = 0; i < gmarkers.length; i++){
-            if(gmarkers[i].category == cat){
+            else{
               gmarkers[i].setVisible(false);
             }
           }
        }
+       //Displays all markers on the map
+       function showall(){
+          for(var i = 0; i < gmarkers.length; i++){
+            gmarkers[i].setVisible(true);
+          }
+       }
+       //Hides all the markers
+       function hideall(){
+          for(var i = 0; i < gmarkers.length; i++){
+            gmarkers[i].setVisible(false);
+          }
+       }
+
        var geocoder; 
       //Show Home Address 
        function codeAddress(){
         geocoder = new google.maps.Geocoder();
         var sAddress = document.getElementById("inputTextAddress").value;
         geocoder.geocode( { 'address': sAddress}, function(results, status) { 
+          find_adjacent_markers(results[0].geometry.location);
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
             var home_marker = new google.maps.Marker({
@@ -250,7 +248,11 @@
               position: results[0].geometry.location,
               icon: "house.png"
             });
-             var homeinfo = "<p><b>Home Location</b> " + "<br><b>Address:</b> " + document.getElementById("inputTextAddress").value;
+             var homeinfo = "<p><b>Home Location</b> " + "<br><b>Address:</b> " + document.getElementById("inputTextAddress").value  
+             + "<br><b>Crimes within 1 mile radius:</b> " + adjmarkers.length + "<br><b>Thefts:</b> "+ count_crime_types('Theft') + 
+             "<br><b>Assault:</b> "+ count_crime_types('Assault') + "<br><b>Robbery:</b> "+ count_crime_types('Robbery') + 
+             "<br><b>Vandalism:</b> "+ count_crime_types('Vandalism') + "<br><b>Burglary:</b> "+ count_crime_types('Burglary') 
+             + "<br><b>Other:</b> "+ count_crime_types('Other');
              var homewindow = new google.maps.InfoWindow({
                 content: homeinfo
                });
@@ -303,37 +305,52 @@
           policemap.setMap(null);
         }
       }
-      
+      //Finds all markers within a radius of home address
+      function find_adjacent_markers(home_address){
+        adjmarkers.length = 0; 
+        for(var i = 0; i < gmarkers.length; i++){
+            //5 mile radius = 8046 meters
+            var radius = 1609;
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(home_address, gmarkers[i].coordinates);
+            if(distance < radius){
+              adjmarkers.category = gmarkers[i].category;
+              adjmarkers.push(gmarkers[i]);
 
-        
-      
+            }
+        }
+      }
+
+      function count_crime_types(type){
+        var count = 0; 
+        for(var i = 0; i < adjmarkers.length; i++){
+          if(adjmarkers[i].category == type){
+            ++count; 
+          }
+        }
+        return count; 
+      }
+
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
   <body>
-    
-    <div id="map-canvas"style="width: 1000px; height: 500px;"></div>
-     <div>
-      Assault: 
-        <input id = "assault_box" type = "checkbox" onclick="boxclick(this,'Assault')"> </input>
-      Arrest: 
-        <input id = "arrest_box" type = "checkbox" onclick="boxclick(this,'Arrest')"> </input>
-      Burglary:
-        <input id = "burglary_box" type = "checkbox" onclick="boxclick(this,'Burglary')"> </input>
-      Robbery: 
-        <input id = "robbery_box" type = "checkbox" onclick="boxclick(this,'Robbery')"> </input>
-      Theft:
-        <input id = "theft_box" type = "checkbox" onclick="boxclick(this,'Theft')"> </input>
-      Vandalism:
-        <input id = "vandalism_box" type = "checkbox" onclick="boxclick(this,'Vandalism')"> </input>
-      Other:
-        <input id = "other_box" type = "checkbox" onclick="boxclick(this,'Other')"> </input>
-      Highlight Crime Areas: 
-        <input id = "crime_box" type = "checkbox" onclick="heat(this)"> </input>
-      Highlight Police Presence: 
-         <input id = "police_box" type = "checkbox" onclick="police(this)"> </input>
-      <input type="text" id="inputTextAddress" style=" width:200px" title="Address to Geocode" />
-      <input type="button" onclick="codeAddress()" id="inputButtonGeocode" style="width:150px" title="Home Address" value="Home Address" />
-    <div>
+    <div align = "center">
+    <input type="text" id="inputTextAddress" style=" width:200px" title="Address to Geocode" />
+    <input type="button" onclick="codeAddress()" id="inputButtonGeocode" style="width:150px" title="Home Address" value="Home Address" />
+    <select>
+      <option value = "all" onclick = "showall()"> Show All</option>
+      <option value = "none" onclick = "hideall()"> Hide All</option>
+      <option value = "assault" onclick = "show('Assault')">Assault</option>
+      <option value = "arrest" onclick = "show('Arrest')">Arrest</option>
+      <option value = "burglary" onclick = "show('Burglary')">Burglary</option>
+      <option value = "robbery" onclick = "show('Robbery')">Robbery</option>
+      <option value = "theft" onclick = "show('Theft')">Theft</option>
+      <option value = "vandalism" onclick = "show('Vandalism')">Vandalism</option>
+      <option value = "other" onclick = "show('Other')">Other</option>
+    </select>
+    <input id = "crime_box" type = "checkbox" onclick="heat(this)"/>Hightlight Crime Areas
+    <input id = "police_box" type = "checkbox" onclick="police(this)"/>Highlight Police Presence    
+    <div id="map-canvas"style="width: 900px; height: 500px;"></div>
+  </div>
   </body>
 </html>
