@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<meta charset="ut-">
+
+<link href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet" type="text/css">
+
+<style>
+
+body {
+  overflo-:scroll;
+}
+
+text {
+  font: 12px san-erif;
+}
+
+svg {
+  display: block;
+}
+
+#chart1 svg{
+  height: 500px;
+  mi-idth: 100px;
+  mi-eight: 100px;
+
+}
+
+</style>
+<body>
+<h2 align = "center">Hourly Crime Report</h2>
+  <div id="chart1">
+    <svg></svg>
+  </div>
+
+<script src="https://raw.github.com/novus/nvd3/master/lib/d3.v2.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/nv.d3.js"></script>
+
+<script src="https://raw.github.com/novus/nvd3/master/src/tooltip.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/utils.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/axis.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBar.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBarChart.js"></script>
+<script>
+
+
+
+
+
+historicalBarChart = [ 
+  {
+    key: "Crime Report",
+    values: [
+      { 
+        "label" : "1AM-2AM" ,
+        "value" : 409
+      } , 
+      { 
+        "label" : "2AM-3AM" , 
+        "value" : 424
+      } , 
+      { 
+        "label" : "3AM-4AM" , 
+        "value" : 283
+      } , 
+      { 
+        "label" : "4AM-5AM" , 
+        "value" : 164
+      } , 
+      { 
+        "label" : "5AM-6AM" ,
+        "value" : 132
+      } , 
+      { 
+        "label" : "6AM-7AM" , 
+        "value" : 216
+      } , 
+      { 
+        "label" : "7AM-8AM" , 
+        "value" : 442
+      } , 
+      { 
+        "label" : "8AM-9AM" , 
+        "value" : 657
+      } , 
+      { 
+        "label" : "9AM-10AM" , 
+        "value" : 602
+      } , 
+      { 
+        "label" : "10AM-1AM" , 
+        "value" : 656
+      } , 
+      { 
+        "label" : "11AM-12PM" , 
+        "value" : 678
+      } , 
+      { 
+        "label" : "12PM-1PM" , 
+        "value" : 646
+      } , 
+      { 
+        "label" : "1PM-2PM" , 
+        "value" : 678
+      } , 
+      { 
+        "label" : "2PM-3PM" , 
+        "value" : 735
+      } , 
+      { 
+        "label" : "3PM-4PM" , 
+        "value" : 719
+      } , 
+      { 
+        "label" : "4PM-5PM" , 
+        "value" : 710
+      } , 
+      { 
+        "label" : "5PM-6PM" , 
+        "value" : 629
+      } , 
+      { 
+        "label" : "6PM-7PM" , 
+        "value" : 618
+      } , 
+      { 
+        "label" : "7PM-8PM" , 
+        "value" : 534
+      } , 
+      { 
+        "label" : "8PM-9PM" , 
+        "value" : 545
+      } , 
+      { 
+        "label" : "9PM-10PM" , 
+        "value" : 450
+      } , 
+      { 
+        "label" : "10PM-11PM" , 
+        "value" : 418
+      } , 
+      { 
+        "label" : "11PM-12AM" , 
+        "value" : 355
+      } , 
+      { 
+        "label" : "12AM-1AM" , 
+        "value" : 495
+      }
+    ]
+  }
+];
+
+
+
+
+nv.addGraph(function() {  
+  var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .staggerLabels(true)
+      .tooltips(false)
+      .showValues(true)
+
+  d3.select('#chart1 svg')
+      .datum(historicalBarChart)
+    .transition().duration(500)
+      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+
+
+</script>
