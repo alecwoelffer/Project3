@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet" type="text/css">
+
+<style>
+
+body {
+  overflow-y:scroll;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+svg {
+  display: block;
+}
+
+#chart1 svg{
+  height: 500px;
+  min-width: 100px;
+  min-height: 100px;
+
+}
+
+</style>
+<body>
+<h2 align = "center">2010 Monthly Crime Report</h2>
+  <div id="chart1">
+    <svg></svg>
+  </div>
+
+<script src="https://raw.github.com/novus/nvd3/master/lib/d3.v2.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/nv.d3.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/tooltip.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/utils.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/axis.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBar.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBarChart.js"></script>
+<script>
+
+
+
+
+
+historicalBarChart = [ 
+  {
+    key: "Crime Report",
+    values: [
+      { 
+        "label" : "Jan" ,
+        "value" : 448
+      } , 
+      { 
+        "label" : "Feb" , 
+        "value" : 447
+      } , 
+      { 
+        "label" : "March" , 
+        "value" : 540
+      } , 
+      { 
+        "label" : "April" , 
+        "value" : 450
+      } , 
+      { 
+        "label" : "May" ,
+        "value" : 506
+      } , 
+      { 
+        "label" : "June" , 
+        "value" : 425
+      } , 
+      { 
+        "label" : "July" , 
+        "value" : 524
+      } , 
+      { 
+        "label" : "Aug" , 
+        "value" : 439
+      } , 
+      { 
+        "label" : "Sep" , 
+        "value" : 464
+      } , 
+      { 
+        "label" : "Oct" , 
+        "value" : 486
+      } , 
+      { 
+        "label" : "Nov" , 
+        "value" : 268
+      } , 
+      { 
+        "label" : "Dec" , 
+        "value" : 441
+      }
+    ]
+  }
+];
+
+
+
+
+nv.addGraph(function() {  
+  var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .staggerLabels(true)
+      //.staggerLabels(historicalBarChart[0].values.length > 8)
+      .tooltips(false)
+      .showValues(true)
+
+  d3.select('#chart1 svg')
+      .datum(historicalBarChart)
+    .transition().duration(500)
+      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+
+
+</script>
