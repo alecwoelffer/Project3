@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet" type="text/css">
+
+<style>
+
+body {
+  overflow-y:scroll;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+svg {
+  display: block;
+}
+
+#chart1 svg{
+  height: 500px;
+  min-width: 100px;
+  min-height: 100px;
+
+}
+
+</style>
+<body>
+<h2 align = "center">Day of the Month Crime Report</h2>
+  <div id="chart1">
+    <svg></svg>
+  </div>
+
+<script src="https://raw.github.com/novus/nvd3/master/lib/d3.v2.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/nv.d3.js"></script>
+<!-- including all the components so I don't have to minify every time I test in development -->
+<script src="https://raw.github.com/novus/nvd3/master/src/tooltip.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/utils.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/axis.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBar.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBarChart.js"></script>
+<script>
+
+
+
+
+
+historicalBarChart = [ 
+  {
+    key: "Crime Report",
+    values: [
+      { 
+        "label" : "1" ,
+        "value" : 424
+      } , 
+      { 
+        "label" : "2" , 
+        "value" : 371
+      } , 
+      { 
+        "label" : "3" , 
+        "value" : 435
+      } , 
+      { 
+        "label" : "4" , 
+        "value" : 380
+      } , 
+      { 
+        "label" : "5" ,
+        "value" : 326
+      } , 
+      { 
+        "label" : "6" , 
+        "value" : 394
+      } , 
+      { 
+        "label" : "7" , 
+        "value" : 330
+      } , 
+      { 
+        "label" : "8" , 
+        "value" : 296
+      } , 
+      { 
+        "label" : "9" , 
+        "value" : 330
+      } , 
+      { 
+        "label" : "10" , 
+        "value" : 402
+      } , 
+      { 
+        "label" : "11" , 
+        "value" : 324
+      } , 
+      { 
+        "label" : "12" , 
+        "value" : 344
+      } , 
+      { 
+        "label" : "13" , 
+        "value" : 324
+      } , 
+      { 
+        "label" : "14" , 
+        "value" : 407
+      } , 
+      { 
+        "label" : "15" , 
+        "value" : 380
+      } , 
+      { 
+        "label" : "16" , 
+        "value" : 333
+      } , 
+      { 
+        "label" : "17" , 
+        "value" : 398
+      } , 
+      { 
+        "label" : "18" , 
+        "value" : 357
+      } , 
+      { 
+        "label" : "19" , 
+        "value" : 368
+      } , 
+      { 
+        "label" : "20" , 
+        "value" : 340
+      } , 
+      { 
+        "label" : "21" , 
+        "value" : 354
+      } , 
+      { 
+        "label" : "22" , 
+        "value" : 390
+      } , 
+      { 
+        "label" : "23" , 
+        "value" : 366
+      } , 
+      { 
+        "label" : "24" , 
+        "value" : 378
+      } , 
+      { 
+        "label" : "25" , 
+        "value" : 361
+      } , 
+      { 
+        "label" : "26" , 
+        "value" : 384
+      } , 
+      { 
+        "label" : "27" , 
+        "value" : 332
+      } , 
+      { 
+        "label" : "28" , 
+        "value" : 380
+      } , 
+      { 
+        "label" : "29" , 
+        "value" : 336
+      } , 
+      { 
+        "label" : "30" , 
+        "value" : 380
+      } , 
+      { 
+        "label" : "31" , 
+        "value" : 258
+      }
+    ]
+  }
+];
+
+
+
+
+nv.addGraph(function() {  
+  var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .staggerLabels(true)
+      //.staggerLabels(historicalBarChart[0].values.length > 8)
+      .tooltips(false)
+      .showValues(true)
+
+  d3.select('#chart1 svg')
+      .datum(historicalBarChart)
+    .transition().duration(500)
+      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+
+
+</script>
