@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet" type="text/css">
+
+<style>
+
+body {
+  overflow-y:scroll;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+svg {
+  display: block;
+}
+
+#chart1 svg{
+  height: 500px;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+</style>
+<body>
+<h2 align = "center">2011 Monthly Crime Report</h2>
+  <div id="chart1">
+    <svg></svg>
+  </div>
+
+<script src="https://raw.github.com/novus/nvd3/master/lib/d3.v2.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/nv.d3.js"></script>
+<!-- including all the components so I don't have to minify every time I test in development -->
+<script src="https://raw.github.com/novus/nvd3/master/src/tooltip.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/utils.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/axis.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBar.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/discreteBarChart.js"></script>
+<script>
+
+
+
+
+
+historicalBarChart = [ 
+  {
+    key: "Crime Report",
+    values: [
+      { 
+        "label" : "Jan" ,
+        "value" : 443
+      } , 
+      { 
+        "label" : "Feb" , 
+        "value" : 382
+      } , 
+      { 
+        "label" : "March" , 
+        "value" : 417
+      } , 
+      { 
+        "label" : "April" , 
+        "value" : 525
+      } , 
+      { 
+        "label" : "May" ,
+        "value" : 490
+      } , 
+      { 
+        "label" : "June" , 
+        "value" : 393
+      } , 
+      { 
+        "label" : "July" , 
+        "value" : 261
+      } , 
+      { 
+        "label" : "Aug" , 
+        "value" : 342
+      } , 
+      { 
+        "label" : "Sep" , 
+        "value" : 336
+      } , 
+      { 
+        "label" : "Oct" , 
+        "value" : 378
+      } , 
+      { 
+        "label" : "Nov" , 
+        "value" : 299
+      } , 
+      { 
+        "label" : "Dec" , 
+        "value" : 302
+      }
+    ]
+  }
+];
+
+
+
+
+nv.addGraph(function() {  
+  var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .staggerLabels(true)
+      //.staggerLabels(historicalBarChart[0].values.length > 8)
+      .tooltips(false)
+      .showValues(true)
+
+  d3.select('#chart1 svg')
+      .datum(historicalBarChart)
+    .transition().duration(500)
+      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+
+
+</script>
