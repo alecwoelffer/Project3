@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link href="https://raw.github.com/novus/nvd3/master/src/nv.d3.css" rel="stylesheet" type="text/css">
+<style>
+
+body {
+  overflow-y:scroll;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+.mypiechart {
+  width: 500px;
+  border: 2px;
+}
+</style>
+<body>
+
+<h2>2010-2013 Crime Statistics</h2>
+<svg id="test1" class="mypiechart"></svg>
+
+<script src="https://raw.github.com/novus/nvd3/master/lib/d3.v2.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/nv.d3.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/legend.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/pie.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/models/pieChart.js"></script>
+<script src="https://raw.github.com/novus/nvd3/master/src/utils.js"></script>
+<script>
+
+  var testdata = [
+    {
+      key: "Assault",
+      y: 2776
+    },
+    {
+      key: "Arrest",
+      y: 1153
+    },
+    {
+      key: "Theft",
+      y: 3238
+    },
+    {
+      key: "Robbery",
+      y: 169
+    },
+    {
+      key: "Vandalism",
+      y: 1474
+    },
+    {
+      key: "Burglary",
+      y: 2715
+    },
+    {
+      key: "Other",
+      y: 684
+    }
+  ];
+
+
+nv.addGraph(function() {
+    var width = 500,
+        height = 500;
+
+    var chart = nv.models.pieChart()
+        .x(function(d) { return d.key })
+        .y(function(d) { return d.y })
+        .values(function(d) { return d })
+        .color(d3.scale.category10().range())
+        .width(width)
+        .height(height);
+
+      d3.select("#test1")
+          .datum([testdata])
+        .transition().duration(1200)
+          .attr('width', width)
+          .attr('height', height)
+          .call(chart);
+
+    chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+
+    return chart;
+});
+
+</script>
