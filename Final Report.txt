@@ -1,0 +1,11 @@
+Project 3 Plan - Team 23
+  Alec Woelffer
+	Nick Winard
+	Kang Du
+
+
+•	Success:  We were able to place a large amount crime data obtained from SpotCrime database into a JSON file which we used to display the data.  We successfully incorporated the use of Google Maps in displaying a variety of crimes and different data.  We also used javascript libraries found on d3js.org to properly display crime statistics derived from our json file.  We were able to add “Home” locations in our website and display crimes that have occurred in immediate areas.  We also were successful in showing police contact, activity and safe locations on our website. So we employed the use of a JSON to hold our data, we incorporated the use of at least two web services (google maps, spotcrime). 
+
+•	Buggy: First, our application only runs on Mozilla Firefox.  There is an issue with Chrome where it won’t read files saved locally on the machine.  This was an issue because we used custom markers in Google maps and our JSON, which holds all of our data, was saved locally.   Another issue is that our project only works when you run it through an IDE.  So far we can only get our project to properly work with PyCharm. 
+ 
+•	Unable to Include:  We were unable to incorporate the use of social media site login’s in our site such as facebook or twitter.  A main issue was that we could not get the sites to validate the URL of our site that we obtained from the CSE department.  We said we would put cop patrol routes in our program as an extra feature but we did not know how to go about that. 
